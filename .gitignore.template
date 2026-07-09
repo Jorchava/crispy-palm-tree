@@ -1,0 +1,68 @@
+# .gitignore
+#
+# Design principle: keep the PORTFOLIO ARTIFACT public, keep the PERSONAL
+# WORKFLOW TOOLING private by default. These are different categories:
+#
+#   ALWAYS PUBLIC (the portfolio artifact itself):
+#     README.md, LICENSE, CONTRIBUTING.md,
+#     docs/product-brief.md, docs/architecture.md
+#     — these ARE what a reviewer should see.
+#
+#   PRIVATE BY DEFAULT (personal AI-workflow tooling — override per project
+#   if collaborating with someone else and want to share the workflow):
+#     AGENTS.md, SKILLS.md, PROJECT_CONTEXT.md, sessions/, opencode.json,
+#     docs/<stack>-patterns.md, docs/lessons-learned.md
+#
+#   lessons-learned.md is a judgment call, not a hard rule: a curated
+#   version CAN be a strong public signal (shows systematic engineering
+#   practice). Default private here because early entries are often rough;
+#   deliberately un-ignore it once you've reviewed and want to publish it.
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Test coverage
+coverage/
+
+# Environment variables — NEVER commit actual values
+.env
+.env.*
+.env.local
+.env.production
+.env.staging
+!.env.example
+
+# Local/demo data files (adjust name to your project's actual local DB file)
+db.json
+!db.example.json
+
+# Private AI-workflow governance files — see design principle above
+AGENTS.md
+SKILLS.md
+PROJECT_CONTEXT.md
+sessions/
+docs/lessons-learned.md
+docs/*-patterns.md
+
+# Local machine-specific MCP/tool config (may contain local file paths
+# even when secrets are handled via env-var templating)
+opencode.json
+!opencode.json.example
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+Thumbs.db
