@@ -112,9 +112,25 @@ grep -rn "@ts-expect-error\|@ts-ignore" src/ --include="*.ts" --include="*.vue" 
   anything originating from `moz-extension://` or `chrome-extension://`
   URLs, and anything explicitly matching a known-safe pattern already
   documented in the relevant session prompt's Manual Verification Script.
-- Do not enable elevated/privileged flags (arbitrary script execution,
-  browser internals access) unless a specific task actually requires them.
-  Default to the minimum capability needed.
+- `--enable-script` is on in opencode.json because interaction
+  verification genuinely needs evaluate_script — this was a deliberate
+  call, not a default to second-guess.
+- `--headless` is intentional: the agent doesn't need a visible window
+  for console/DOM checks, and a headless run is what's actually running
+  here — there is no window to see, by design, not a sign anything is
+  broken.
+- Cap automated interaction verification at 2–3 attempts. If
+  dispatching synthetic keyboard/click events to prove a game interaction
+  (movement, an "interact" trigger, a modal opening) hasn't produced the
+  expected DOM change within a couple of tries, stop — do not escalate to
+  lower-level checks like reading raw WebGL pixels via readPixels().
+  That doesn't answer the actual question (canvas focus, listener target,
+  and event timing are all still unverified) and can run a single turn
+  long enough to break the underlying model call entirely (this happened
+  in Session 1). Report what was tried and what didn't confirm, and ask
+  the human to verify that specific interactive step directly — a real
+  keypress in a real window resolves in seconds what synthetic-event
+  troubleshooting can spiral on for many turns.
 - Never point browser automation at a default/personal browser profile.
   Use an isolated, dedicated testing profile.
 
@@ -124,6 +140,17 @@ grep -rn "@ts-expect-error\|@ts-ignore" src/ --include="*.ts" --include="*.vue" 
   Training data goes stale; a library's current docs do not.
 - After confirming a pattern works in this project, add it to the relevant
   stack-pattern doc so future sessions don't need to re-verify it.
+
+### Code Search MCP (grep.app, configured)
+- Use for: seeing how other real projects actually use a library API in
+  practice — a different job from Context7, which gives the library's own
+  official reference. Good for "what does a working PixiJS v8 + Vue
+  integration look like elsewhere" style questions, not just "what does
+  this method's signature say."
+- Free, remote, no auth required.
+- Public code only — never a substitute for reading this project's own
+  installed skills (.agents/skills/pixijs-migration-v8/) when the two
+  disagree; this project's verified constraints win.
 
 ---
 
